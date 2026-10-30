@@ -28,7 +28,51 @@ npm run preview
 
 La vista previa queda disponible en <http://localhost:4173>. El proyecto usa `base: './'`, así que `dist/` también puede publicarse en una subcarpeta de un hosting estático.
 
-### Scripts disponibles
+## Despliegue en Netlify
+
+El juego es una SPA estática: **no necesita backend ni claves de API** para funcionar. La configuración ya está incluida en [`netlify.toml`](./netlify.toml):
+
+- Build: `npm run build`
+- Directorio publicado: `dist`
+- Node.js 22
+- Fallback de rutas hacia `index.html`
+- Caché inmutable para `/assets/*` y sin caché para `index.html`
+- Cabeceras de seguridad básicas
+
+### Opción A: desde Git (recomendada)
+
+1. Sube el repositorio a GitHub, GitLab o Bitbucket.
+2. En Netlify elige **Add new site → Import an existing project**.
+3. Selecciona el repositorio. Netlify leerá `netlify.toml` automáticamente.
+4. Confirma **Build command** `npm run build` y **Publish directory** `dist`.
+5. Pulsa **Deploy site**.
+
+### Opción B: con Netlify CLI
+
+```bash
+npm run build
+npx netlify-cli deploy --prod --dir=dist
+```
+
+La primera vez te pedirá iniciar sesión y vincular o crear el sitio.
+
+### Opción C: arrastrar `dist/`
+
+```bash
+npm run build
+```
+
+Luego arrastra la carpeta `dist/` a <https://app.netlify.com/drop>.
+
+### Backend en Netlify
+
+Netlify no puede ejecutar Spring Boot. El backend es opcional y el frontend no lo consume, así que el juego funciona igual en Netlify. Si más adelante quieres usar la API, despliégala en un servicio de contenedores (Railway, Render, Fly.io, etc.) y añade el dominio resultante a `app.cors.allowed-origins` en `backend-spring-boot/src/main/resources/application.properties`.
+
+### Variables de entorno
+
+No hay variables obligatorias. No configures `GEMINI_API_KEY` ni claves similares: el proyecto no las usa.
+
+## Scripts disponibles
 
 | Comando | Descripción |
 | --- | --- |
@@ -73,6 +117,7 @@ Consejo: el parámetro `?autostart=1` inicia una partida directamente con la con
 │   ├── App.tsx           # Máquina de estados del juego
 │   └── main.tsx
 ├── index.html
+├── netlify.toml          # Build, redirects, caché y cabeceras para Netlify
 ├── vite.config.ts
 └── backend-spring-boot/  # API REST opcional (Java 17 + Spring Boot 3)
 ```

@@ -59,6 +59,7 @@ export const SpringBootModal: React.FC<SpringBootModalProps> = ({ isOpen, onClos
 │   ├── main.tsx
 │   └── index.css
 ├── index.html
+├── netlify.toml                     # Build, redirects y cabeceras para Netlify
 ├── package.json
 ├── vite.config.ts
 │
